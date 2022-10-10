@@ -72,15 +72,15 @@ return require('packer').startup(function(use)
   use { 'ms-jpq/chadtree', branch= 'chad', run= 'python3 -m chadtree deps'}
 
   use {
-	  { "williamboman/mason.nvim",
-	    config = function() require('mason').setup() end
-	  },
-	  { "williamboman/mason-lspconfig.nvim",
-	    after = "mason.nvim",
-	    config = function() require('mason-lspconfig').setup({
-		    ensure_installed = { "sumneko_lua", "rust_analyzer" }
-	    }) end
-	}
+    { "williamboman/mason.nvim",
+    config = function() require('mason').setup() end
+  },
+  { "williamboman/mason-lspconfig.nvim",
+  after = "mason.nvim",
+  config = function() require('mason-lspconfig').setup({
+    ensure_installed = { "sumneko_lua", "rust_analyzer" }
+  }) end
+}
   }
 
   use {
@@ -89,15 +89,17 @@ return require('packer').startup(function(use)
   }
 
   use {
-       {'hrsh7th/cmp-nvim-lsp'},
-       {'hrsh7th/cmp-buffer'  },
-       {'hrsh7th/cmp-path'    },
-       {'hrsh7th/cmp-cmdline' },
-       {'hrsh7th/nvim-cmp'    },
-       {'hrsh7th/cmp-vsnip'},
-       {'hrsh7th/vim-vsnip'},
-       {'onsails/lspkind.nvim'},
+    {'hrsh7th/cmp-nvim-lsp'},
+    {'hrsh7th/cmp-buffer'  },
+    {'hrsh7th/cmp-path'    },
+    {'hrsh7th/cmp-cmdline' },
+    {'hrsh7th/nvim-cmp'    },
+    {'hrsh7th/cmp-vsnip'},
+    {'hrsh7th/vim-vsnip'},
+    {'onsails/lspkind.nvim'},
   }       
+
+  use "rafamadriz/friendly-snippets"
 
   use 'folke/tokyonight.nvim'
 
@@ -106,14 +108,42 @@ return require('packer').startup(function(use)
   use {
     'numToStr/Comment.nvim',
     config = function()
-        require('Comment').setup()
+      require('Comment').setup()
     end
   }
 
-  -- TODO: this make cmp display in a buffer instead
-  -- use { 'rcarriga/nvim-notify' }
+  use { 'rcarriga/nvim-notify' }
 
   use { 'sindrets/diffview.nvim', requires = 'nvim-lua/plenary.nvim' }
+
+  use {'akinsho/toggleterm.nvim', tag = '*',
+    config = function()
+      require('toggleterm').setup({
+        size = 20,
+        open_mapping = [[<c-\>]],
+        hide_numbers = true,
+        shade_filetypes = {},
+        shade_terminals = true,
+        shading_factor = 2,
+        start_in_insert = true,
+        insert_mappings = true,
+        persist_size = true,
+        direction = "float",
+        close_on_exit = true,
+        shell = vim.o.shell,
+        float_opts = {
+          border = "curved",
+          winblend = 0,
+          highlights = {
+            border = "Normal",
+            background = "Normal",
+          },
+        },
+      })
+    end
+  }
+
+use { 'lukas-reineke/indent-blankline.nvim' }
 
 end)
 
