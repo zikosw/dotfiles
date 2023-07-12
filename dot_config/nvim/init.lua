@@ -40,6 +40,7 @@ P.S. You can delete this when you're done too. It's your config now :)
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
+vim.o.background = 'light'
 
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
@@ -271,7 +272,7 @@ vim.keymap.set('i', '(', '(<c-g>u', { remap = false })
 vim.keymap.set('i', ')', ')<c-g>u', { remap = false })
 vim.keymap.set('i', '{', '{<c-g>u', { remap = false })
 vim.keymap.set('i', '}', '}<c-g>u', { remap = false })
-vim.keymap.set('i', '[', ']<c-g>u', { remap = false })
+vim.keymap.set('i', '[', '[<c-g>u', { remap = false })
 vim.keymap.set('i', ']', ']<c-g>u', { remap = false })
 vim.keymap.set('i', '<CR>', '<CR><c-g>u', { remap = false })
 
@@ -396,6 +397,24 @@ require('nvim-treesitter.configs').setup {
       },
     },
   },
+  playground = {
+    enable = true,
+    disable = {},
+    updatetime = 25, -- Debounced time for highlighting nodes in the playground from source code
+    persist_queries = false, -- Whether the query persists across vim sessions
+    keybindings = {
+      toggle_query_editor = 'o',
+      toggle_hl_groups = 'i',
+      toggle_injected_languages = 't',
+      toggle_anonymous_nodes = 'a',
+      toggle_language_display = 'I',
+      focus_language = 'f',
+      unfocus_language = 'F',
+      update = 'R',
+      goto_node = '<cr>',
+      show_help = '?',
+    },
+  }
 }
 
 -- Diagnostic keymaps
@@ -456,7 +475,16 @@ end
 --  the `settings` field of the server config. You must look up that documentation yourself.
 local servers = {
   -- clangd = {},
-  -- gopls = {},
+  gopls = {
+    gopls = {
+      usePlaceholders = true,
+      analyses = {
+        unusedparams = true,
+        nilness = true,
+        unusedwrite = true
+      }
+    }
+  },
   -- pyright = {},
   -- rust_analyzer = {},
   -- tsserver = {},
@@ -598,7 +626,7 @@ cmp.setup {
 -- vim.api.nvim_set_hl(0, "ColorColumn", { ctermbg=0, bg=LightGrey })
 local PmenuHighlight = {
   PmenuSel = { bg = "#282C34", fg = "NONE" },
-  Pmenu = { fg = "#C5CDD9", bg = "#22252A" },
+  Pmenu = { fg = "#C5CDD9", bg = "#91aadb" },
 
   CmpItemAbbrDeprecated = { fg = "#7E8294", bg = "NONE", strikethrough = true},
   CmpItemAbbrMatch = { fg = "#82AAFF", bg = "NONE", bold = true },
@@ -644,3 +672,29 @@ for key, value in pairs(PmenuHighlight) do
 -- vim.api.nvim_set_hl(0, "ColorColumn", { ctermbg=0, bg=LightGrey })
   api.nvim_set_hl(0, key, value)
 end
+
+
+if vim.g.neovide then
+  -- Helper function for transparency formatting
+  local alpha = function()
+    return string.format("%x", math.floor(255 * vim.g.transparency or 0.8))
+  end
+  -- g:neovide_transparency should be 0 if you want to unify transparency of content and title bar.
+  vim.g.neovide_transparency = 0.0
+  vim.g.transparency = 0.8
+  -- vim.g.neovide_background_color = "#0f1117" .. alpha() -- dark
+  vim.g.neovide_background_color = "#dee6ee" .. alpha() -- dark
+end
+
+
+
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+
+local chadtree_settings = {
+  theme = {
+    text_colour_set = 'solarized_light' --'nerdtree_syntax_light'
+  }
+}
+vim.api.nvim_set_var("chadtree_settings", chadtree_settings)
+

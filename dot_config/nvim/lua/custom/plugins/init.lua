@@ -96,5 +96,61 @@ return {
     },
     { 'akinsho/git-conflict.nvim', version = "*", config = true },
   },
-  {'f-person/git-blame.nvim'}
+  {'f-person/git-blame.nvim'},
+  {
+    'glacambre/firenvim',
+
+    -- Lazy load firenvim
+    -- Explanation: https://github.com/folke/lazy.nvim/discussions/463#discussioncomment-4819297
+    cond = not not vim.g.started_by_firenvim,
+    build = function()
+      require("lazy").load({ plugins = "firenvim", wait = true })
+      vim.fn["firenvim#install"](0)
+    end
+  },
+  {
+    'phaazon/hop.nvim',
+    branch = 'v2',
+    config = function()
+      local hop = require('hop')
+      hop.setup()
+      local directions = require('hop.hint').HintDirection
+      vim.keymap.set('', 'f', function()
+        hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = true })
+      end, {remap=true})
+      vim.keymap.set('', 'F', function()
+        hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true })
+      end, {remap=true})
+      vim.keymap.set('', 't', function()
+        hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = true, hint_offset = -1 })
+      end, {remap=true})
+      vim.keymap.set('', 'T', function()
+        hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true, hint_offset = 1 })
+      end, {remap=true})
+    end
+  },
+  {
+    "gregorias/nvim-mapper",
+    dependencies = "nvim-telescope/telescope.nvim",
+    config = function() require"nvim-mapper".setup{} end,
+  },
+  {
+    "gennaro-tedesco/nvim-jqx",
+    ft = { "json", "yaml" },
+  },
+
+  { "nvim-treesitter/playground"},
+  {
+    'windwp/nvim-autopairs',
+    event = "InsertEnter",
+    opts = {} -- this is equalent to setup({}) function
+  },
+  {
+    "nvim-treesitter/nvim-treesitter-context",
+    config = function()
+      require'treesitter-context'.setup{
+        enable = true,
+      }
+    end
+  }
 }
