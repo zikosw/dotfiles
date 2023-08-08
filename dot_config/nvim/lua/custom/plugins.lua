@@ -244,6 +244,17 @@ return {
       auto_close = true,
     },
   },
+  {
+    'rbong/vim-flog',
+    event = "VeryLazy",
+    cmd = "Flog",
+  },
+  {
+    'lukas-reineke/headlines.nvim',
+    event = "VeryLazy",
+    dependencies = "nvim-treesitter/nvim-treesitter",
+    config = true, -- or `opts = {}`
+  }
   -- {
   --   "nvim-telescope/telescope.nvim",
   --   dependencies = "nvim-treesitter/nvim-treesitter",
@@ -269,6 +280,27 @@ return {
   --           i = { ["<c-t>"] = trouble.open_with_trouble },
   --           n = { ["<c-t>"] = trouble.open_with_trouble },
   --         }
+  --       },
+  --     }
+  --   end,
+  -- },
+  -- {
+  --   "nvim-neorg/neorg",
+  --   build = ":Neorg sync-parsers",
+  --   dependencies = { "nvim-lua/plenary.nvim" },
+  --   event = "VeryLazy",
+  --   config = function()
+  --     require("neorg").setup {
+  --       load = {
+  --         ["core.defaults"] = {}, -- Loads default behaviour
+  --         ["core.concealer"] = {}, -- Adds pretty icons to your documents
+  --         ["core.dirman"] = { -- Manages Neorg workspaces
+  --           config = {
+  --             workspaces = {
+  --               notes = "~/sync-obsidian",
+  --             },
+  --           },
+  --         },
   --       },
   --     }
   --   end,
