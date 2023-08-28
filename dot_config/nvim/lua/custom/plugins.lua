@@ -219,9 +219,27 @@ return {
     opts = {
     }
   },
+  -- {
+  --   'fatih/vim-go',
+  --   ft = "go",
+  -- },
   {
-    'fatih/vim-go',
-    ft = "go",
+    "ray-x/go.nvim",
+    dependencies = {  -- optional packages
+      "ray-x/guihua.lua",
+      "neovim/nvim-lspconfig",
+      "nvim-treesitter/nvim-treesitter",
+    },
+    config = function()
+      require('go').setup{
+        lsp_inlay_hints = {
+          show_variable_name = true,
+        },
+      }
+    end,
+    event = {"CmdlineEnter"},
+    ft = {"go", 'gomod'},
+    build = ':lua require("go.install").update_all_sync()' -- if you need to install/update all binaries
   },
   {
     'gelguy/wilder.nvim',
@@ -238,6 +256,7 @@ return {
   },
   {
     "folke/trouble.nvim",
+    event = "VeryLazy",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = {
       auto_fold = true,
@@ -254,7 +273,7 @@ return {
     event = "VeryLazy",
     dependencies = "nvim-treesitter/nvim-treesitter",
     config = true, -- or `opts = {}`
-  }
+  },
   -- {
   --   "nvim-telescope/telescope.nvim",
   --   dependencies = "nvim-treesitter/nvim-treesitter",
@@ -305,4 +324,32 @@ return {
   --     }
   --   end,
   -- },
+  {
+    'dense-analysis/ale',
+    event = "VeryLazy",
+    dependencies = "folke/trouble.nvim",
+    config = function ()
+      -- Define autocommands with Lua APIs
+      -- See: h:api-autocmd, h:augroup
+
+      local augroup = vim.api.nvim_create_augroup   -- Create/get autocommand group
+      local autocmd = vim.api.nvim_create_autocmd   -- Create autocommand
+
+      -- General settings:
+      --------------------
+
+      -- Highlight on yank
+      augroup('ALERefreshTrouble', { clear = true })
+      autocmd({'User','BufReadPost'}, {
+        pattern = "*.go",
+        group = 'ALERefreshTrouble',
+        callback = function(opts)
+          print("ale lint post",opts.file)
+          vim.cmd "TroubleRefresh"
+        end
+      })
+
+    end
+  }
 }
+

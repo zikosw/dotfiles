@@ -33,7 +33,12 @@ local servers = {
       analyses = {
         unusedparams = true,
         nilness = true,
-        unusedwrite = true
+        unusedwrite = true,
+        staticcheck = true,
+      },
+      hints = {
+        functionTypeParameters = true,
+        parameterNames = true,
       }
     }
   },

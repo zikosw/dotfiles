@@ -1,75 +1,29 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
-# Color Palette
-export BLACK=0xff181926
-export WHITE=0xffcad3f5
-export RED=0xffed8796
-export GREEN=0xffa6da95
-export BLUE=0xff8aadf4
-export YELLOW=0xffeed49f
-export ORANGE=0xfff5a97f
-export MAGENTA=0xffc6a0f6
-export GREY=0xff939ab7
-export TRANSPARENT=0x00000000
+source "$HOME/.config/sketchybar/colors.sh"
 
-# General bar colors
-export BAR_COLOR=0xa024273a
-export ICON_COLOR=$WHITE # Color of all icons
-export LABEL_COLOR=$WHITE # Color of all labels
-export BACKGROUND_1=0x903c3e4f
-export BACKGROUND_2=0x90494d64
+CORE_COUNT=$(sysctl -n machdep.cpu.thread_count)
+CPU_INFO=$(ps -eo pcpu,user)
+CPU_SYS=$(echo "$CPU_INFO" | grep -v $(whoami) | sed "s/[^ 0-9\.]//g" | awk "{sum+=\$1} END {print sum/(100.0 * $CORE_COUNT)}")
+CPU_USER=$(echo "$CPU_INFO" | grep $(whoami) | sed "s/[^ 0-9\.]//g" | awk "{sum+=\$1} END {print sum/(100.0 * $CORE_COUNT)}")
 
-export POPUP_BACKGROUND_COLOR=0xff24273a
-export POPUP_BORDER_COLOR=$WHITE
+TOPPROC=$(ps axo "%cpu,ucomm" | sort -nr | tail +1 | head -n1 | awk '{printf "%.0f%% %s\n", $1, $2}' | sed -e 's/com.apple.//g')
+CPUP=$(echo $TOPPROC | sed -nr 's/([^\%]+).*/\1/p')
 
-export SHADOW_COLOR=$BLACK
+CPU_PERCENT="$(echo "$CPU_SYS $CPU_USER" | awk '{printf "%.0f\n", ($1 + $2)*100}')"
 
-cpu_top=(
-  # label.font="$FONT:Semibold:7"
-  label=CPU
-  icon.drawing=off
-  width=0
-  padding_right=15
-  y_offset=6
-)
+COLOR=$WHITE
+case "$CPU_PERCENT" in
+  [1-2][0-9]) COLOR=$YELLOW
+  ;;
+  [3-6][0-9]) COLOR=$ORANGE
+  ;;
+  [7-9][0-9]|100) COLOR=$RED
+  ;;
+esac
 
-cpu_percent=(
-  label=CPU
-  y_offset=-4
-  padding_right=15
-  width=55
-  icon.drawing=off
-  update_freq=2
-)
-
-cpu_sys=(
-  width=0
-  graph.color=$RED
-  graph.fill_color=$RED
-  label.drawing=off
-  icon.drawing=off
-  background.height=30
-  background.drawing=on
-  background.color=$TRANSPARENT
-)
-
-cpu_user=(
-  graph.color=$BLUE
-  label.drawing=off
-  icon.drawing=off
-  background.height=30
-  background.drawing=on
-  background.color=$TRANSPARENT
-)
-
-sketchybar --add item cpu.top right              \
-           --set cpu.top "${cpu_top[@]}"         \
-                                                 \
-           --add item cpu.percent right          \
-           --set cpu.percent "${cpu_percent[@]}" \
-                                                 \
-           --add graph cpu.sys right 75          \
-           --set cpu.sys "${cpu_sys[@]}"         \
-                                                 \
-           --add graph cpu.user right 75         \
-           --set cpu.user "${cpu_user[@]}"
+sketchybar --set  cpu.percent label=$CPU_PERCENT% \
+                              label.color=$COLOR  \
+           --set  cpu.top     label="$TOPPROC"    \
+           --push cpu.sys     $CPU_SYS            \
+           --push cpu.user    $CPU_USER

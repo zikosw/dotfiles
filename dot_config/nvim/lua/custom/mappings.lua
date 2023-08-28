@@ -28,7 +28,7 @@ M.disabled = {
 M.trouble = {
   n = {
     ["gr"] = {
-      "<cmd>TroubleToggle lsp_references<cr>",
+      "<cmd>Trouble lsp_references<cr>",
       "Trouble LSP References",
       opts = {
         remap = false,
