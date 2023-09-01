@@ -1,4 +1,3 @@
--- TODO: make
 -- Set highlight on search
 -- vim.o.hlsearch = false
 
@@ -55,3 +54,26 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   group = highlight_group,
   pattern = '*',
 })
+
+-- Run gofmt + goimport on save
+
+local format_sync_grp = vim.api.nvim_create_augroup("GoImport", {})
+vim.api.nvim_create_autocmd("BufWritePre", {
+  pattern = "*.go",
+  callback = function()
+    require('go.format').goimport()
+    require('go.format').gofmt()
+  end,
+  group = format_sync_grp,
+})
+
+-- local autocmd = vim.api.nvim_create_autocmd
+
+-- Auto resize panes when resizing nvim window
+-- autocmd("VimResized", {
+--   pattern = "*",
+--   command = "tabdo wincmd =",
+--
+-- })
+--
+--

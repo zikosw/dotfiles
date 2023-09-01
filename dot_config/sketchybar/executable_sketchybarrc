@@ -8,7 +8,7 @@ FONT="FiraCode Nerd Font"
 
 ############## BAR ##############
 sketchybar --bar height=25 \
-                 y_offset=0 \
+                 y_offset=2 \
                  blur_radius=0 \
                  position=top \
                  padding_left=0 \
@@ -137,7 +137,7 @@ sketchybar --add item clock_logo right\
                             background.color=0xff92B3F5
 
 sketchybar --add item battery right \
-           --set battery update_freq=1000 \
+           --set battery update_freq=2 \
                          icon.drawing=off \
                          script="~/.config/sketchybar/plugins/power.sh" \
                          background.color=0xff3C3E4F \
@@ -150,7 +150,7 @@ sketchybar --add item power_logo right \
                  background.color=0xffB3E1A7
 
 sketchybar --add item net right \
-           --set net script="~/.config/sketchybar/plugins/net.sh" \
+           --set net update_freq=10 script="~/.config/sketchybar/plugins/net.sh" \
                      icon.drawing=off \
                      background.color=0xff3C3E4F \
                      background.padding_left=0

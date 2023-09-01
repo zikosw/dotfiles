@@ -1,6 +1,69 @@
-return {
+local overrides = require("custom.configs.overrides")
+
+---@type NvPluginSpec[]
+local plugins = {
+
+  -- Override plugin definition options
+
+  {
+    "neovim/nvim-lspconfig",
+    dependencies = {
+      -- format & linting
+      {
+        "jose-elias-alvarez/null-ls.nvim",
+        config = function()
+          require "custom.configs.null-ls"
+        end,
+      },
+    },
+    config = function()
+      require "plugins.configs.lspconfig"
+      require "custom.configs.lspconfig"
+    end, -- Override to setup mason-lspconfig
+  },
+
+  -- override plugin configs
+  {
+    "williamboman/mason.nvim",
+    opts = overrides.mason
+  },
+
+  {
+    "nvim-treesitter/nvim-treesitter",
+    opts = overrides.treesitter,
+  },
+
+  {
+    "nvim-tree/nvim-tree.lua",
+    opts = overrides.nvimtree,
+  },
+
+  -- Install a plugin
+  {
+    "max397574/better-escape.nvim",
+    event = "InsertEnter",
+    config = function()
+      require("better_escape").setup()
+    end,
+  },
+
+  -- To make a plugin not be loaded
+  -- {
+  --   "NvChad/nvim-colorizer.lua",
+  --   enabled = false
+  -- },
+
+  -- All NvChad plugins are lazy-loaded by default
+  -- For a plugin to be loaded, you will need to set either `ft`, `cmd`, `keys`, `event`, or set `lazy = false`
+  -- If you want a plugin to load on startup, add `lazy = false` to a plugin spec, for example
+  -- {
+  --   "mg979/vim-visual-multi",
+  --   lazy = false,
+  -- }
+
   { 'ms-jpq/chadtree',
     branch = 'chad',
+    enabled = false,
     run = 'python3 -m chadtree deps',
     cmd = "CHADopen",
   },
@@ -47,7 +110,6 @@ return {
     end
   },
 
-  -- {'f-person/git-blame.nvim'},
   {
     'phaazon/hop.nvim',
     branch = 'v2',
@@ -79,139 +141,7 @@ return {
       }
     end
   },
-  {
-    "neovim/nvim-lspconfig",
-    dependencies = {
-      -- Automatically install LSPs to stdpath for neovim
-      { 'williamboman/mason.nvim', config = true },
-      'williamboman/mason-lspconfig.nvim',
 
-      -- Useful status updates for LSP
-      -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', tag = 'legacy', opts = {} },
-
-      -- Additional lua configuration, makes nvim stuff amazing!
-      'folke/neodev.nvim',
-    },
-    config = function()
-      require "plugins.configs.lspconfig"
-      require "custom.configs.mason-lspconfig"
-    end,
-  },
-
-  {
-    "nvim-treesitter/nvim-treesitter",
-    config = function ()
-      dofile(vim.g.base46_cache .. "syntax")
-      require('nvim-treesitter.configs').setup {
-        -- Add languages to be installed here that you want installed for treesitter
-        ensure_installed = { 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim' },
-
-        -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
-        auto_install = false,
-
-        highlight = {
-          enable = true,
-          use_languagetree = true,
-        },
-
-        indent = { enable = true },
-
-        incremental_selection = {
-          enable = true,
-          keymaps = {
-            init_selection = '<c-space>',
-            node_incremental = '<c-space>',
-            scope_incremental = '<c-s>',
-            node_decremental = '<M-space>',
-          },
-        },
-        textobjects = {
-          select = {
-            enable = true,
-            lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
-            keymaps = {
-              -- You can use the capture groups defined in textobjects.scm
-              ['aa'] = '@parameter.outer',
-              ['ia'] = '@parameter.inner',
-              ['af'] = '@function.outer',
-              ['if'] = '@function.inner',
-              ['ac'] = '@class.outer',
-              ['ic'] = '@class.inner',
-            },
-          },
-          move = {
-            enable = true,
-            set_jumps = true, -- whether to set jumps in the jumplist
-            goto_next_start = {
-              [']m'] = '@function.outer',
-              [']]'] = '@class.outer',
-            },
-            goto_next_end = {
-              [']M'] = '@function.outer',
-              [']['] = '@class.outer',
-            },
-            goto_previous_start = {
-              ['[m'] = '@function.outer',
-              ['[['] = '@class.outer',
-            },
-            goto_previous_end = {
-              ['[M'] = '@function.outer',
-              ['[]'] = '@class.outer',
-            },
-          },
-          swap = {
-            enable = true,
-            swap_next = {
-              ['<leader>a'] = '@parameter.inner',
-            },
-            swap_previous = {
-              ['<leader>A'] = '@parameter.inner',
-            },
-          },
-        },
-        playground = {
-          enable = true,
-          disable = {},
-          updatetime = 25, -- Debounced time for highlighting nodes in the playground from source code
-          persist_queries = false, -- Whether the query persists across vim sessions
-          keybindings = {
-            toggle_query_editor = 'o',
-            toggle_hl_groups = 'i',
-            toggle_injected_languages = 't',
-            toggle_anonymous_nodes = 'a',
-            toggle_language_display = 'I',
-            focus_language = 'f',
-            unfocus_language = 'F',
-            update = 'R',
-            goto_node = '<cr>',
-            show_help = '?',
-          },
-        },
-      }
-    end
-  },
-  {
-    "monaqa/dial.nvim",
-    -- lazy-load on keys
-    -- mode is `n` by default. For more advanced options, check the section on key mappings
-    keys = { "<C-a>", { "<C-x>", mode = "n" } },
-    config = function ()
-      local augend = require("dial.augend")
-      require("dial.config").augends:register_group{
-        default = {
-          augend.integer.alias.decimal,
-          augend.integer.alias.hex,
-          augend.date.alias["%Y/%m/%d"],
-          augend.constant.alias.bool,
-        },
-      }
-    end
-  },
-  {
-    'f-person/git-blame.nvim',
-    event = "VeryLazy",
-  },
   {
     "folke/todo-comments.nvim",
     event = "VeryLazy",
@@ -219,10 +149,6 @@ return {
     opts = {
     }
   },
-  -- {
-  --   'fatih/vim-go',
-  --   ft = "go",
-  -- },
   {
     "ray-x/go.nvim",
     dependencies = {  -- optional packages
@@ -241,19 +167,15 @@ return {
     ft = {"go", 'gomod'},
     build = ':lua require("go.install").update_all_sync()' -- if you need to install/update all binaries
   },
-  {
-    'gelguy/wilder.nvim',
-    event = "VeryLazy",
-    config = function()
-      require('wilder').setup {
-        modes = {':', '/', '?'}
-      }
-    end,
-  },
-  {
-    'tpope/vim-fugitive',
-    event = "VeryLazy"
-  },
+  -- {
+  --   'gelguy/wilder.nvim',
+  --   event = "VeryLazy",
+  --   config = function()
+  --     require('wilder').setup {
+  --       modes = {':', '/', '?'}
+  --     }
+  --   end,
+  -- },
   {
     "folke/trouble.nvim",
     event = "VeryLazy",
@@ -274,82 +196,16 @@ return {
     dependencies = "nvim-treesitter/nvim-treesitter",
     config = true, -- or `opts = {}`
   },
-  -- {
-  --   "nvim-telescope/telescope.nvim",
-  --   dependencies = "nvim-treesitter/nvim-treesitter",
-  --   cmd = "Telescope",
-  --   init = function()
-  --     require("core.utils").load_mappings "telescope"
-  --   end,
-  --   config = function(_, opts)
-  --     dofile(vim.g.base46_cache .. "telescope")
-  --     local telescope = require "telescope"
-  --     telescope.setup(opts)
-  --
-  --     -- load extensions
-  --     for _, ext in ipairs(opts.extensions_list) do
-  --       telescope.load_extension(ext)
-  --     end
-  --   end,
-  --   opts = function()
-  --     local trouble = require('trouble')
-  --     return {
-  --       defaults = {
-  --         mappings = {
-  --           i = { ["<c-t>"] = trouble.open_with_trouble },
-  --           n = { ["<c-t>"] = trouble.open_with_trouble },
-  --         }
-  --       },
-  --     }
-  --   end,
-  -- },
-  -- {
-  --   "nvim-neorg/neorg",
-  --   build = ":Neorg sync-parsers",
-  --   dependencies = { "nvim-lua/plenary.nvim" },
-  --   event = "VeryLazy",
-  --   config = function()
-  --     require("neorg").setup {
-  --       load = {
-  --         ["core.defaults"] = {}, -- Loads default behaviour
-  --         ["core.concealer"] = {}, -- Adds pretty icons to your documents
-  --         ["core.dirman"] = { -- Manages Neorg workspaces
-  --           config = {
-  --             workspaces = {
-  --               notes = "~/sync-obsidian",
-  --             },
-  --           },
-  --         },
-  --       },
-  --     }
-  --   end,
-  -- },
   {
     'dense-analysis/ale',
     event = "VeryLazy",
     dependencies = "folke/trouble.nvim",
-    config = function ()
-      -- Define autocommands with Lua APIs
-      -- See: h:api-autocmd, h:augroup
-
-      local augroup = vim.api.nvim_create_augroup   -- Create/get autocommand group
-      local autocmd = vim.api.nvim_create_autocmd   -- Create autocommand
-
-      -- General settings:
-      --------------------
-
-      -- Highlight on yank
-      augroup('ALERefreshTrouble', { clear = true })
-      autocmd({'User','BufReadPost'}, {
-        pattern = "*.go",
-        group = 'ALERefreshTrouble',
-        callback = function(opts)
-          print("ale lint post",opts.file)
-          vim.cmd "TroubleRefresh"
-        end
-      })
-
-    end
-  }
+  },
+  {'wakatime/vim-wakatime'},
+  {
+    'f-person/git-blame.nvim',
+    event = "VeryLazy",
+  },
 }
 
+return plugins

@@ -1,7 +1,14 @@
+---@type MappingsTable
 local M = {}
 
--- In order to disable a default keymap, use
--- TODO: what about M.general
+M.general = {
+  n = {
+    [";"] = { ":", "enter command mode", opts = { nowait = true } },
+  },
+}
+
+-- more keybinds!
+
 M.disabled = {
   -- i = {
     -- Disable default keymap from NVChad
@@ -52,33 +59,6 @@ M.trouble = {
   }
 }
 
--- override default lspconfig
--- M.lspconfig = {
---   n = {
---     -- ["<leader>ra"] = "",
---     ["<leader>rn"] = {
---       function()
---         require("nvchad_ui.renamer").open()
---       end,
---       "LSP rename",
---     },
---     ["gi"] = {
---       function()
---         vim.lsp.buf.implementation()
---       end,
---       "LSP implementation",
---     },
---   }
--- }
-
--- disable nvimtree mappings
--- M.nvimtree = {
---   n = {
---     ["<C-n>"] = "",
---     ["<leader>e"] = "",
---   },
--- }
-
 M.telescope = {
   n = {
     -- remap file grep to <leader>fg instead of <leader>fw
@@ -108,7 +88,6 @@ M.telescope = {
   }
 }
 
--- Your custom mappings
 M.forUndoWhileInsert = {
   i = {
     ["<space>"]= { "<space><c-g>u","save after space", opts = { remap = false }},
@@ -122,59 +101,9 @@ M.forUndoWhileInsert = {
   }
 }
 
-M.chadTree = {
-  n = {
-    ["<leader>e"] = {"<cmd>CHADopen<cr>","Open CHADTree"},
-  },
-}
-
-M.dial = {
-  i = {
-    ["<C-a>"] = {
-      function ()
-        require("dial.map").inc_normal()
-      end,
-      "inc", opts= {remap = false, expr = true}},
-    ["<C-x>"] = {
-      function ()
-        require("dial.map").dec_normal()
-      end,
-      "dec", opts= {remap = false, expr = true}},
-  },
-  n = {
-    ["<C-a>"] = {
-      function ()
-        require("dial.map").inc_normal()
-      end,
-      "inc", opts= {remap = false, expr = true}},
-    ["<C-x>"] = {
-      function ()
-        require("dial.map").dec_normal()
-      end,
-      "dec", opts= {remap = false, expr = true}},
-  },
-  v = {
-    ["<C-a>"] = {
-      function ()
-        require("dial.map").inc_visual()
-      end,
-      "inc", opts= {remap = false, expr = true}},
-    ["<C-x>"] = {
-      function ()
-        require("dial.map").dec_visual()
-      end,
-      "dec", opts= {remap = false, expr = true}},
-  }
-  -- n = {
-  -- }
--- vim.keymap.set("n", "<C-a>", require("dial.map").inc_normal(), {noremap = true})
--- vim.keymap.set("n", "<C-x>", require("dial.map").dec_normal(), {noremap = true})
--- vim.keymap.set("n", "g<C-a>", require("dial.map").inc_gnormal(), {noremap = true})
--- vim.keymap.set("n", "g<C-x>", require("dial.map").dec_gnormal(), {noremap = true})
-  -- v = {
-  -- }
-
-}
-
+-- M.chadTree = {
+--   n = {
+--     ["<leader>e"] = {"<cmd>CHADopen<cr>","Open CHADTree"},
+--   },
+-- }
 return M
-
