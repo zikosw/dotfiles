@@ -1,0 +1,12 @@
+# pack-refs with: peeled fully-peeled sorted 
+50634d9b50acc06598b7b6cdc6c979d293a0d26d refs/remotes/origin/NVM_LAZY_LOAD_EXTRA_COMMANDS
+c91ada631476847a8833d4b43f36eac8c3087023 refs/remotes/origin/auto-use
+d16c484fe103239ef7c5b4c9282c85fb08d327f1 refs/remotes/origin/bugfix-19
+a3b57898342ea030d36e476280cffda42a555ee4 refs/remotes/origin/fix-test
+6c02e2794cd1dd9e08c23c7686b5a8542c40d2fd refs/remotes/origin/install-keywords
+745291dcf20686ec421935f1c3f8f3a2918dd106 refs/remotes/origin/master
+89e0b91e1f1d73bad262c32016dfe6ce47bf04e6 refs/remotes/origin/revert-76-master
+30f85550443436f688ecd2baaea0b25653464cdc refs/remotes/origin/test-autouse-lazyload
+e94abbc760528cd0d5cee742e07e6d8939c387a6 refs/remotes/origin/tests
+c71316462966994c2e12bb71bf149bafe45b96e9 refs/remotes/origin/yarn-lazy
+b8eb9a7ae9dc956ef2ca0a7a34f33bfd230f18e4 refs/remotes/origin/yarn-unset-notice
